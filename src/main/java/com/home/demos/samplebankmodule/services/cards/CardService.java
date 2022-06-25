@@ -32,7 +32,7 @@ public class CardService {
 
     public List<CreatedCardDto> findAllForClient(Long clientId) {
         return repository.findAllByClientId(clientId).stream()
-                .map(payment -> mapper.map(payment, CreatedCardDto.class))
+                .map(card -> mapper.map(card, CreatedCardDto.class))
                 .collect(Collectors.toList());
 
     }
