@@ -5,18 +5,18 @@ import com.home.demos.samplebankmodule.repositories.clients.entities.Client;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.sql.Connection;
 import java.util.List;
 
-@Repository
+@ApplicationScoped
 public class ClientRepositoryImpl implements ClientRepository {
 
     private final QueryRunner queryRunner;
 
-    @Autowired
+    @Inject
     public ClientRepositoryImpl(QueryRunner queryRunner) {
         this.queryRunner = queryRunner;
     }

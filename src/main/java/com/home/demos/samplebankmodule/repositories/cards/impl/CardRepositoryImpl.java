@@ -5,19 +5,18 @@ import com.home.demos.samplebankmodule.repositories.cards.entities.Card;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.sql.Connection;
 import java.util.List;
-import java.util.Objects;
 
-@Repository
+@ApplicationScoped
 public class CardRepositoryImpl implements CardRepository {
 
     private final QueryRunner queryRunner;
 
-    @Autowired
+    @Inject
     public CardRepositoryImpl(QueryRunner queryRunner) {
         this.queryRunner = queryRunner;
     }

@@ -5,19 +5,19 @@ import com.home.demos.samplebankmodule.repositories.cards.CardRepository;
 import com.home.demos.samplebankmodule.repositories.cards.entities.Card;
 import com.home.demos.samplebankmodule.rest.cards.dto.CreateCardDto;
 import com.home.demos.samplebankmodule.rest.cards.dto.CreatedCardDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
+@ApplicationScoped
 public class CardService {
 
     private final ModelMapper mapper;
     private final CardRepository repository;
 
-    @Autowired
+    @Inject
     public CardService(ModelMapper mapper, CardRepository repository) {
         this.mapper = mapper;
         this.repository = repository;

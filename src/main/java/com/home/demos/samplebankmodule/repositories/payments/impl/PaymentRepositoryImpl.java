@@ -5,18 +5,18 @@ import com.home.demos.samplebankmodule.repositories.payments.entities.Payment;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.sql.Connection;
 import java.util.List;
 
-@Repository
+@ApplicationScoped
 public class PaymentRepositoryImpl implements PaymentRepository {
 
     private final QueryRunner queryRunner;
 
-    @Autowired
+    @Inject
     public PaymentRepositoryImpl(QueryRunner queryRunner) {
         this.queryRunner = queryRunner;
     }

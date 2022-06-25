@@ -9,9 +9,10 @@ import com.home.demos.samplebankmodule.rest.clients.dto.CreateClientDto;
 import com.home.demos.samplebankmodule.rest.clients.dto.CreatedClientDto;
 import com.home.demos.samplebankmodule.rest.payments.dto.CreatePaymentDto;
 import com.home.demos.samplebankmodule.rest.payments.dto.CreatedPaymentDto;
-import org.springframework.stereotype.Component;
 
-@Component
+import javax.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
 public class ModelMapper {
 
     public Client map(CreateClientDto createClientDto) {

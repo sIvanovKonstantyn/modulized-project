@@ -3,30 +3,32 @@ package com.home.demos.samplebankmodule.rest.cards;
 import com.home.demos.samplebankmodule.rest.cards.dto.CreateCardDto;
 import com.home.demos.samplebankmodule.rest.cards.dto.CreatedCardDto;
 import com.home.demos.samplebankmodule.services.cards.CardService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@RestController
-@RequestMapping("/cards")
+@Path("/cards")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class CardResource {
 
     private final CardService cardService;
 
-    @Autowired
+    @Inject
     public CardResource(CardService paymentService) {
         this.cardService = paymentService;
     }
 
-    @PostMapping
-    public ResponseEntity<CreatedCardDto> create(@RequestBody CreateCardDto createPaymentDto) {
-        return ResponseEntity.ok().body(cardService.create(createPaymentDto));
+    @POST
+    public CreatedCardDto create(CreateCardDto createPaymentDto) {
+        return cardService.create(createPaymentDto);
     }
 
-    @GetMapping("/{clientId}")
-    public List<CreatedCardDto> findAllForClient(@PathVariable Long clientId) {
+    @GET
+    @Path("/{clientId}")
+    public List<CreatedCardDto> findAllForClient(@PathParam("clientId") Long clientId) {
         return cardService.findAllForClient(clientId);
     }
 }

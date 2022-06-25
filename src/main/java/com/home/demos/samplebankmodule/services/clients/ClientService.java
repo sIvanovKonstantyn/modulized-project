@@ -5,19 +5,19 @@ import com.home.demos.samplebankmodule.repositories.clients.ClientRepository;
 import com.home.demos.samplebankmodule.repositories.clients.entities.Client;
 import com.home.demos.samplebankmodule.rest.clients.dto.CreateClientDto;
 import com.home.demos.samplebankmodule.rest.clients.dto.CreatedClientDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
+@ApplicationScoped
 public class ClientService {
 
     private final ModelMapper mapper;
     private final ClientRepository repository;
 
-    @Autowired
+    @Inject
     public ClientService(ModelMapper mapper, ClientRepository repository) {
         this.mapper = mapper;
         this.repository = repository;
