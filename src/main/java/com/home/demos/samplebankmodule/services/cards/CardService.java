@@ -1,10 +1,10 @@
 package com.home.demos.samplebankmodule.services.cards;
 
+import com.home.demos.samplebankmodule.infra.ModelMapper;
 import com.home.demos.samplebankmodule.repositories.cards.CardRepository;
 import com.home.demos.samplebankmodule.repositories.cards.entities.Card;
 import com.home.demos.samplebankmodule.rest.cards.dto.CreateCardDto;
 import com.home.demos.samplebankmodule.rest.cards.dto.CreatedCardDto;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,15 +24,15 @@ public class CardService {
     }
 
     public CreatedCardDto create(CreateCardDto createCardDto) {
-        Card card = mapper.map(createCardDto, Card.class);
+        Card card = mapper.map(createCardDto);
         card = repository.save(card);
 
-        return mapper.map(card, CreatedCardDto.class);
+        return mapper.map(card);
     }
 
     public List<CreatedCardDto> findAllForClient(Long clientId) {
         return repository.findAllByClientId(clientId).stream()
-                .map(card -> mapper.map(card, CreatedCardDto.class))
+                .map(mapper::map)
                 .collect(Collectors.toList());
 
     }

@@ -1,10 +1,10 @@
 package com.home.demos.samplebankmodule.services.clients;
 
+import com.home.demos.samplebankmodule.infra.ModelMapper;
 import com.home.demos.samplebankmodule.repositories.clients.ClientRepository;
 import com.home.demos.samplebankmodule.repositories.clients.entities.Client;
 import com.home.demos.samplebankmodule.rest.clients.dto.CreateClientDto;
 import com.home.demos.samplebankmodule.rest.clients.dto.CreatedClientDto;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,15 +24,15 @@ public class ClientService {
     }
 
     public CreatedClientDto create(CreateClientDto createClientDto) {
-        Client client = mapper.map(createClientDto, Client.class);
+        Client client = mapper.map(createClientDto);
         client = repository.save(client);
 
-        return mapper.map(client, CreatedClientDto.class);
+        return mapper.map(client);
     }
 
     public List<CreatedClientDto> findAll() {
         return repository.findAll().stream()
-                .map(client -> mapper.map(client, CreatedClientDto.class))
+                .map(mapper::map)
                 .collect(Collectors.toList());
     }
 }

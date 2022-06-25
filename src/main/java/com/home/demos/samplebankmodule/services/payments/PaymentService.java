@@ -1,10 +1,10 @@
 package com.home.demos.samplebankmodule.services.payments;
 
+import com.home.demos.samplebankmodule.infra.ModelMapper;
 import com.home.demos.samplebankmodule.repositories.payments.PaymentRepository;
 import com.home.demos.samplebankmodule.repositories.payments.entities.Payment;
 import com.home.demos.samplebankmodule.rest.payments.dto.CreatePaymentDto;
 import com.home.demos.samplebankmodule.rest.payments.dto.CreatedPaymentDto;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,15 +24,15 @@ public class PaymentService {
     }
 
     public CreatedPaymentDto create(CreatePaymentDto createPaymentDto) {
-        Payment payment = mapper.map(createPaymentDto, Payment.class);
+        Payment payment = mapper.map(createPaymentDto);
         payment = repository.save(payment);
 
-        return mapper.map(payment, CreatedPaymentDto.class);
+        return mapper.map(payment);
     }
 
     public List<CreatedPaymentDto> findAllForClient(Long clientId) {
         return repository.findAllByClientId(clientId).stream()
-                .map(payment -> mapper.map(payment, CreatedPaymentDto.class))
+                .map(mapper::map)
                 .collect(Collectors.toList());
 
     }
