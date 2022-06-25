@@ -1,50 +1,62 @@
 package com.home.demos.samplebankmodule.config;
 
+import com.home.demos.samplebankmodule.repositories.cards.CardRepository;
+import com.home.demos.samplebankmodule.repositories.cards.impl.CardRepositoryImpl;
+import com.home.demos.samplebankmodule.repositories.clients.ClientRepository;
+import com.home.demos.samplebankmodule.repositories.clients.impl.ClientRepositoryImpl;
+import com.home.demos.samplebankmodule.repositories.payments.PaymentRepository;
+import com.home.demos.samplebankmodule.repositories.payments.impl.PaymentRepositoryImpl;
 import org.apache.commons.dbutils.QueryRunner;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.h2.jdbcx.JdbcDataSource;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.sql.DataSource;
-import javax.ws.rs.Produces;
+import java.io.IOException;
+import java.util.Properties;
 
-@ApplicationScoped
 public class SampleBankModuleConfiguration {
 
-    @ConfigProperty(name = "db.driver")
-    private String driver;
+    private static final Properties PROPERTIES = new Properties();
 
-    @ConfigProperty(name = "db.url")
-    private String url;
+    static {
+        try {
+            PROPERTIES.load(
+                    SampleBankModuleConfiguration.class.getClassLoader().getResourceAsStream("application.properties")
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-    @ConfigProperty(name = "db.user")
-    private String user;
+    public static PaymentRepository paymentRepository() {
+        return new PaymentRepositoryImpl(queryRunner());
+    }
 
-    @ConfigProperty(name = "db.password")
-    private String password;
+    public static CardRepository cardRepository() {
+        return new CardRepositoryImpl(queryRunner());
+    }
 
-    @Produces
-    @ApplicationScoped
-    public DataSource dataSource() {
+    public static ClientRepository clientRepository() {
+        return new ClientRepositoryImpl(queryRunner());
+    }
+
+    public static DataSource dataSource() {
 
         try {
-            Class.forName(driver);
+            Class.forName(PROPERTIES.getProperty("db.driver"));
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
 
         JdbcDataSource jdbcDataSource = new JdbcDataSource();
 
-        jdbcDataSource.setUrl(url);
-        jdbcDataSource.setUser(user);
-        jdbcDataSource.setUser(password);
+        jdbcDataSource.setUrl(PROPERTIES.getProperty("db.url"));
+        jdbcDataSource.setUser(PROPERTIES.getProperty("db.user"));
+        jdbcDataSource.setUser(PROPERTIES.getProperty("db.password"));
 
         return jdbcDataSource;
     }
 
-    @Produces
-    @ApplicationScoped
-    public QueryRunner queryRunner() {
+    public static QueryRunner queryRunner() {
         return new QueryRunner(dataSource());
     }
 }

@@ -1,6 +1,6 @@
 package com.home.demos.samplebankmodule.repositories.cards;
 
-import com.home.demos.samplebankmodule.repositories.cards.entities.Card;
+import com.home.demos.samplebankmodule.model.Card;
 
 import java.util.List;
 

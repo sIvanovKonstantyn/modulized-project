@@ -1,6 +1,6 @@
 package com.home.demos.samplebankmodule.repositories.payments;
 
-import com.home.demos.samplebankmodule.repositories.payments.entities.Payment;
+import com.home.demos.samplebankmodule.model.Payment;
 
 import java.util.List;
 

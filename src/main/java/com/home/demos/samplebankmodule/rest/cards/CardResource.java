@@ -1,34 +1,40 @@
 package com.home.demos.samplebankmodule.rest.cards;
 
+import com.google.gson.Gson;
+import com.home.demos.samplebankmodule.infra.ModelMapper;
+import com.home.demos.samplebankmodule.model.Card;
 import com.home.demos.samplebankmodule.rest.cards.dto.CreateCardDto;
 import com.home.demos.samplebankmodule.rest.cards.dto.CreatedCardDto;
-import com.home.demos.samplebankmodule.services.cards.CardService;
+import spark.Route;
 
-import javax.inject.Inject;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import java.util.List;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-@Path("/cards")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
 public class CardResource {
+    private static final Gson gson = new Gson();
+    private static final ModelMapper modelMapper = new ModelMapper();
 
-    private final CardService cardService;
-
-    @Inject
-    public CardResource(CardService paymentService) {
-        this.cardService = paymentService;
+    public static Route create() {
+        return (request, response) -> Optional.of(gson.fromJson(request.body(), CreateCardDto.class))
+                .map(modelMapper::map)
+                .map(Card::create)
+                .map(CreatedCardDto::new)
+                .map(gson::toJson)
+                .orElse("TODO: ERROR");
     }
 
-    @POST
-    public CreatedCardDto create(CreateCardDto createPaymentDto) {
-        return cardService.create(createPaymentDto);
-    }
-
-    @GET
-    @Path("/{clientId}")
-    public List<CreatedCardDto> findAllForClient(@PathParam("clientId") Long clientId) {
-        return cardService.findAllForClient(clientId);
+    public static Route findAllForClient() {
+        return (request, response) ->
+                gson.toJson(
+                        Optional.of(request.params(":clientId"))
+                                .map(Long::parseLong)
+                                .map(Card::new)
+                                .map(Card::findAllLikeThis)
+                                .orElse(Collections.emptyList())
+                                .stream()
+                                .map(CreatedCardDto::new)
+                                .collect(Collectors.toList())
+                );
     }
 }

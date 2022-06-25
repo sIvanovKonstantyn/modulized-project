@@ -1,34 +1,40 @@
 package com.home.demos.samplebankmodule.rest.payments;
 
+import com.google.gson.Gson;
+import com.home.demos.samplebankmodule.infra.ModelMapper;
+import com.home.demos.samplebankmodule.model.Payment;
 import com.home.demos.samplebankmodule.rest.payments.dto.CreatePaymentDto;
 import com.home.demos.samplebankmodule.rest.payments.dto.CreatedPaymentDto;
-import com.home.demos.samplebankmodule.services.payments.PaymentService;
+import spark.Route;
 
-import javax.inject.Inject;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import java.util.List;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-@Path("/payments")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
 public class PaymentResource {
+    private static final Gson gson = new Gson();
+    private static final ModelMapper modelMapper = new ModelMapper();
 
-    private final PaymentService paymentService;
-
-    @Inject
-    public PaymentResource(PaymentService paymentService) {
-        this.paymentService = paymentService;
+    public static Route create() {
+        return (request, response) -> Optional.of(gson.fromJson(request.body(), CreatePaymentDto.class))
+                .map(modelMapper::map)
+                .map(Payment::create)
+                .map(CreatedPaymentDto::new)
+                .map(gson::toJson)
+                .orElse("TODO: ERROR");
     }
 
-    @POST
-    public CreatedPaymentDto create(CreatePaymentDto createPaymentDto) {
-        return paymentService.create(createPaymentDto);
-    }
-
-    @GET
-    @Path("/{clientId}")
-    public List<CreatedPaymentDto> findAllForClient(@PathParam("clientId") Long clientId) {
-        return paymentService.findAllForClient(clientId);
+    public static Route findAllForClient() {
+        return (request, response) ->
+                gson.toJson(
+                        Optional.of(request.params(":clientId"))
+                                .map(Long::parseLong)
+                                .map(Payment::new)
+                                .map(Payment::findAllLikeThis)
+                                .orElse(Collections.emptyList())
+                                .stream()
+                                .map(CreatedPaymentDto::new)
+                                .collect(Collectors.toList())
+                );
     }
 }

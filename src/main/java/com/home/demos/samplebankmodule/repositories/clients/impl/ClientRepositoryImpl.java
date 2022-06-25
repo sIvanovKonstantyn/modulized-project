@@ -1,22 +1,18 @@
 package com.home.demos.samplebankmodule.repositories.clients.impl;
 
+import com.home.demos.samplebankmodule.model.Client;
 import com.home.demos.samplebankmodule.repositories.clients.ClientRepository;
-import com.home.demos.samplebankmodule.repositories.clients.entities.Client;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import java.sql.Connection;
 import java.util.List;
 
-@ApplicationScoped
 public class ClientRepositoryImpl implements ClientRepository {
 
     private final QueryRunner queryRunner;
 
-    @Inject
     public ClientRepositoryImpl(QueryRunner queryRunner) {
         this.queryRunner = queryRunner;
     }

@@ -1,8 +1,8 @@
 package com.home.demos.samplebankmodule.infra;
 
-import com.home.demos.samplebankmodule.repositories.cards.entities.Card;
-import com.home.demos.samplebankmodule.repositories.clients.entities.Client;
-import com.home.demos.samplebankmodule.repositories.payments.entities.Payment;
+import com.home.demos.samplebankmodule.model.Card;
+import com.home.demos.samplebankmodule.model.Client;
+import com.home.demos.samplebankmodule.model.Payment;
 import com.home.demos.samplebankmodule.rest.cards.dto.CreateCardDto;
 import com.home.demos.samplebankmodule.rest.cards.dto.CreatedCardDto;
 import com.home.demos.samplebankmodule.rest.clients.dto.CreateClientDto;
@@ -10,9 +10,6 @@ import com.home.demos.samplebankmodule.rest.clients.dto.CreatedClientDto;
 import com.home.demos.samplebankmodule.rest.payments.dto.CreatePaymentDto;
 import com.home.demos.samplebankmodule.rest.payments.dto.CreatedPaymentDto;
 
-import javax.enterprise.context.ApplicationScoped;
-
-@ApplicationScoped
 public class ModelMapper {
 
     public Client map(CreateClientDto createClientDto) {

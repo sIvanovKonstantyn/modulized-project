@@ -1,33 +1,39 @@
 package com.home.demos.samplebankmodule.rest.clients;
 
+import com.google.gson.Gson;
+import com.home.demos.samplebankmodule.infra.ModelMapper;
+import com.home.demos.samplebankmodule.model.Client;
 import com.home.demos.samplebankmodule.rest.clients.dto.CreateClientDto;
 import com.home.demos.samplebankmodule.rest.clients.dto.CreatedClientDto;
-import com.home.demos.samplebankmodule.services.clients.ClientService;
+import spark.Route;
 
-import javax.inject.Inject;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import java.util.List;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-@Path("/clients")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
 public class ClientResource {
 
-    private final ClientService clientService;
+    private static final Gson gson = new Gson();
+    private static final ModelMapper modelMapper = new ModelMapper();
 
-    @Inject
-    public ClientResource(ClientService clientService) {
-        this.clientService = clientService;
+    public static Route create() {
+        return (request, response) -> Optional.of(gson.fromJson(request.body(), CreateClientDto.class))
+                .map(modelMapper::map)
+                .map(Client::create)
+                .map(CreatedClientDto::new)
+                .map(gson::toJson)
+                .orElse("TODO: ERROR");
     }
 
-    @POST
-    public CreatedClientDto create(CreateClientDto createClientDto) {
-        return clientService.create(createClientDto);
-    }
-
-    @GET
-    public List<CreatedClientDto> findAll() {
-        return clientService.findAll();
+    public static Route findAll() {
+        return (request, response) ->
+                gson.toJson(
+                        Optional.of(new Client())
+                                .map(Client::findAll)
+                                .orElse(Collections.emptyList())
+                                .stream()
+                                .map(CreatedClientDto::new)
+                                .collect(Collectors.toList())
+                );
     }
 }

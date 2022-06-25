@@ -1,22 +1,18 @@
 package com.home.demos.samplebankmodule.repositories.cards.impl;
 
+import com.home.demos.samplebankmodule.model.Card;
 import com.home.demos.samplebankmodule.repositories.cards.CardRepository;
-import com.home.demos.samplebankmodule.repositories.cards.entities.Card;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import java.sql.Connection;
 import java.util.List;
 
-@ApplicationScoped
 public class CardRepositoryImpl implements CardRepository {
 
     private final QueryRunner queryRunner;
 
-    @Inject
     public CardRepositoryImpl(QueryRunner queryRunner) {
         this.queryRunner = queryRunner;
     }
