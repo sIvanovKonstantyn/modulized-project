@@ -1,5 +1,7 @@
 package com.home.demos.samplebankmodule.config;
 
+import org.apache.commons.dbutils.QueryRunner;
+import org.h2.jdbcx.JdbcDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
@@ -7,10 +9,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.transaction.TransactionManager;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.sql.DataSource;
@@ -36,28 +34,29 @@ public class SampleBankModuleConfiguration {
 
     @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
-        dataSource.setDriverClassName(environment.getProperty("db.driver"));
-        dataSource.setUrl(environment.getProperty("db.url"));
-        dataSource.setUsername(environment.getProperty("db.user"));
-        dataSource.setPassword(environment.getProperty("db.password"));
+        try {
+            Class.forName(environment.getProperty("db.driver"));
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
 
+        JdbcDataSource jdbcDataSource = new JdbcDataSource();
+
+        jdbcDataSource.setUrl(environment.getProperty("db.url"));
+        jdbcDataSource.setUser(environment.getProperty("db.user"));
+        jdbcDataSource.setUser(environment.getProperty("db.password"));
+
+        return jdbcDataSource;
+    }
+
+    @Bean
+    public QueryRunner queryRunner() {
         System.out.println("BEANS:\n"
                 + String.join("\n", context.getBeanDefinitionNames())
                 + "...BEANS\n"
         );
 
-        return dataSource;
-    }
-
-    @Bean
-    public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(dataSource());
-    }
-
-    @Bean
-    public TransactionManager transactionManager() {
-        return new DataSourceTransactionManager(dataSource());
+        return new QueryRunner(dataSource());
     }
 }
